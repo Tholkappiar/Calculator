@@ -4,33 +4,67 @@ public class Calculator{
 
     // Main Method
     public static void main(String[] args) {
-        getValues();
+        getUserInput();
     }
 
     // To get value from the user and run recursively util the user enter 'q' .
-    public static void getValues()
+    public static void getUserInput()
     {
+        /* Intializing num1 , num2 here to avoid the error where the variables are used , if it is initialized in try catch 
+        block , it will throw an error where the variables are used, because it limits the scope. */
+
+        float num1 = 0;
+        float num2 = 0;
         Scanner sc = new Scanner(System.in);
-        System.out.println("Enter the First Number or\nPress q and Enter to exit the calculator !");
+
+        System.out.println("\nPress q and Enter to exit the calculator ! \nEnter the First Number : ");
        
         String str = sc.next();
         if (str.equals("q")) {
             System.out.println("Exiting..........!");
-            return;
+            System.exit(0);
         }
 
-        float num1 = Float.parseFloat(str);
-        System.out.println("Enter the Operation + , - , / , * : ");
-        char ch1 = sc.next().charAt(0);
-        System.out.println("Enter the Second Number : ");
-        float num2 = sc.nextFloat();
+        // If the user input is not a number , then it will handle the exception 
 
-        System.out.println(check(num1, ch1, num2));
+        try{
+            num1 = Float.parseFloat(str);
+        }
+        catch(Exception e)
+        {
+            System.out.println("\n###### Invalid Input ! Please Enter a valid Number ###### ");
+            getUserInput();
+        }
 
-        getValues();
+        
+        System.out.println("\nEnter the Operation + , - , / , * : ");
+        
+        // To only perform the given Operations (+,-,*,/) 
+        String ch = sc.next();
+        if(ch.charAt(0)!='+' && ch.charAt(0)!='-' && ch.charAt(0)!='*' && ch.charAt(0)!='/' || ch.length()!=1)
+        {
+            System.out.println("\nEnter only the given Operations : + , - , * , / ");
+            getUserInput();
+        }
+
+        System.out.println("\nEnter the Second Number : ");
+
+        // If the user input is not a number ,then it will handle the exception 
+        try{
+            num2 = sc.nextFloat();
+        }
+        catch(Exception e)
+        {
+            System.out.println("\n###### Invalid Input ! Please Enter a valid Number #######");
+            getUserInput();
+        }
+        
+
+        System.out.println("\nAnswer : "+check(num1, ch.charAt(0), num2));
+        getUserInput();
     }
 
-    // To check , which operation to perform
+    // To call the specific method for the operator , which is given by the user. 
     protected static float check(float num1,char ch1,float num2)
     {
         Operations oper = new Operations();
@@ -45,14 +79,14 @@ public class Calculator{
             case '/':
                 return oper.div(num1,num2);
             default:
-                System.out.println("Enter the valid Operator -> + - / *");
+                System.out.println("\n###### Enter the valid Operator -> (+,-,/,*) ######");
         }
         return -1;
     }
 }
 
 
-// To perform Operations
+// For Calculations
 class Operations{
     protected float add(float num,float num2)
     {
